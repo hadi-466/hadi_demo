@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>All-in-One Platform Landing</title>
+  <style>
+    :root {
+      --blue: #010750;
+      --white: #ffffff;
+      --darkblue: #0a1f44;
+      --gray-light: #f8f8f8;
+      --gray-dark: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--white);
+      color: var(--darkblue);
+      line-height: 2.6;
+      scroll-behavior: smooth;
+    }
+
+    /* Sticky header */
+    header {
+      position: sticky;
+      top: 0;
+      background: var(--white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      z-index: 9999;
+    }
+
+    .logo {
+      font-weight: 74000;
+      font-size: 1.8rem;
+      color: var(--blue);
+      user-select: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--blue);
+      font-weight: 7400;
+      font-size: 1rem;
+      transition: color 0.3s ease;
+      user-select: none;
+    }
+
+    nav a:hover {
+      color: var(--darkblue);
+    }
+
+
+
+
+
+    /* Hamburger for mobile */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      user-select: none;
+    }
+
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: var(--blue);
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    /* Sections common */
+    section {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+    }
+
+    h2.section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 2rem;
+      color: var(--blue);
+    }
+
+    /* Tools Section */
+    .tool-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+      justify-content: center;
+    }
+
+    .card {
+      background: var(--gray-light);
+      border-radius: 15px;
+      flex: 1 1 300px;
+      max-width: 320px;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(1, 7, 80, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      color: var(--darkblue);
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 25px rgba(1, 7, 80, 0.25);
+    }
+
+    .card .icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Client Reviews */
+    .reviews {
+      background: var(--gray-light);
+      border-radius: 15px;
+      padding: 2rem 1rem;
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      user-select: none;
+    }
+
+    .review {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      background: var(--white);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(1, 7, 80, 0.1);
+    }
+
+    .review img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--blue);
+      flex-shrink: 0;
+    }
+
+    .review-content {
+      flex: 1;
+    }
+
+    .review-content p {
+      font-size: 1rem;
+      margin: 0 0 0.5rem 0;
+      color: var(--darkblue);
+    }
+
+    .review-content .author {
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    /* About Section */
+    .about {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .about img {
+      width: 300px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(1, 7, 80, 0.15);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .about-text {
+      font-size: 1.1rem;
+      color: var(--darkblue);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--blue);
+      color: var(--white);
+      text-align: center;
+      padding: 1.5rem 1rem;
+      user-select: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .about {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .about img {
+        width: 80%;
+        margin-bottom: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+        position: absolute;
+        top: 65px;
+        right: 1.5rem;
+        background: var(--white);
+        flex-direction: column;
+        width: 220px;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 6px 15px rgba(1, 7, 80, 0.15);
+        border-radius: 10px;
+        z-index: 9999;
+      }
+
+      nav.mobile-active {
+        display: flex;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .tool-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">AllInOne</div>
+
+    <nav>
+      <a  href="#tools">Tools</a>
+      <a href="#reviews">Reviews</a>
+      <a href="notes.html">Notes</a>
+      <a href="todo.html">To-Do-List</a>
+      <a href="timer.html">Countdown Timer</a>
+      <a href="password-generator.html">Password Generator</a>
+      <a href="calculator.html">Smart calculator</a>
+      <a href="age-calculator.html">Age calculator</a>
+      <a href="voiceoverapp.html">Voice to speech app</a>
+      <a href="color-picker.html">Color picker</a>
+
+
+    </nav>
+    <div class="hamburger" id="hamburger" aria-label="Toggle navigation" role="button" tabindex="0">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" style="max-width:1200px; margin: 3rem auto; text-align:center; padding: 0 1.5rem;">
+    <h1 style="font-size: 3.2rem; color: var(--blue); margin-bottom: 0.5rem;">Welcome to All-in-One Platform</h1>
+    <p style="font-size: 1.25rem; color: var(--darkblue); max-width: 600px; margin: 0 auto 2rem;">
+      Your ultimate productivity toolkit — everything you need in one place.
+    </p>
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80" alt="Productivity" style="width: 100%; max-width: 800px; border-radius: 15px; box-shadow: 0 6px 20px rgba(1,7,80,0.15);" />
+  </section>
+
+  <!-- Tools Section -->
+  <section id="tools">
+    <h2 class="section-title">Our Powerful Tools</h2>
+    <div class="tool-cards">
+      <a href="notes.html" class="card" title="Notes">
+        <div class="icon">📝</div>
+        <h3>Notes</h3>
+        <p>Write and save your ideas instantly.</p>
+      </a>
+      <a href="todo.html" class="card" title="To-Do List">
+        <div class="icon">✅</div>
+        <h3>To-Do List</h3>
+        <p>Keep track of tasks with ease.</p>
+      </a>
+      <a href="timer.html" class="card" title="Countdown Timer">
+        <div class="icon">⏰</div>
+        <h3>Countdown Timer</h3>
+        <p>Manage time and deadlines effectively.</p>
+      </a>
+      <a href="password-generator.html" class="card" title="Password Generator">
+        <div class="icon">🔐</div>
+        <h3>Password Generator</h3>
+        <p>Create strong passwords in seconds.</p>
+      </a>
+      <a href="age-calculator.html" class="card" title="Age Calculator">
+        <div class="icon">📅</div>
+        <h3>Age Calculator</h3>
+        <p>Calculate your exact age quickly.</p>
+      </a>
+      <a href="calculator.html" class="card" title="Smart Calculator">
+        <div class="icon">🧮</div>
+        <h3>Smart Calculator</h3>
+        <p>Solve math problems instantly.</p>
+      </a>
+       <a href="voiceoverapp.html" class="card" title="Smart Calculator">
+        <div class="icon">🎤</div>
+        <h3>Voice to speech app</h3>
+        <p>with our Voice to speech app you can try to many languages and download audio</p>
+      </a>
+         <a href="color-picker.html" class="card" title="Smart Calculator">
+        <div class="icon">🎨</div>
+        <h3>Color picker app</h3>
+        <p>with our Color picker app upload a picture you will get all color and we can copy color plate to </p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Client Reviews Section -->
+  <section id="reviews">
+    <h2 class="section-title">What Our Users Say</h2>
+    <div class="reviews">
+      <div class="review">
+        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Client 1" />
+        <div class="review-content">
+          <p>“This platform changed how I manage my workday. Super handy and easy!”</p>
+          <div class="author">- Sarah M.</div>
+        </div>
+      </div>
+      <div class="review">
+        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Client 2" />
+        <div class="review-content">
+          <p>“I love the all-in-one tools! The password generator alone saves me hours.”</p>
+          <div class="author">- James K.</div>
+        </div>
+      </div>
+      <div class="review">
+        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Client 3" />
+        <div class="review-content">
+          <p>“Highly recommend for anyone wanting to boost productivity and stay organized.”</p>
+          <div class="author">- Emily R.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2 class="section-title">About Us</h2>
+    <div class="about">
+      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80" alt="About Image" />
+      <div class="about-text">
+        <p>At All-in-One Platform, we believe productivity should be simple, efficient, and enjoyable. That's why we've bundled essential tools into a single easy-to-use web app designed for everyone. Whether you're a student, professional, or creative, our platform helps you organize your life and work seamlessly.</p>
+        <p>Join thousands of satisfied users and experience the convenience of having Notes, To-Do List, Countdown Timer, Password Generator, Age Calculator, and Smart Calculator etc. all at your fingertips and fun fact it's free to use.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 All-in-One Platform. All rights reserved.
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.querySelector('nav');
+
+    hamburger.addEventListener('click', () => {
+      nav.classList.toggle('mobile-active');
+    });
+
+    // Close menu when clicking a link (mobile)
+    document.querySelectorAll('nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (nav.classList.contains('mobile-active')) {
+          nav.classList.remove('mobile-active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

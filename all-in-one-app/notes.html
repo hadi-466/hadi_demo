@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notes Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #010750;
+      margin: 0;
+      padding: 2rem;
+    }
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #010750;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #010750;
+      border-radius: 5px;
+    }
+    button {
+      background: #010750;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #490d61;
+    }
+    .note-list {
+      margin-top: 30px;
+    }
+    .note {
+      background: #f2f2f2;
+      padding: 15px;
+      border-left: 5px solid #010750;
+      margin-bottom: 15px;
+      border-radius: 5px;
+    }
+    .note p {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    .note .actions {
+      margin-top: 10px;
+      text-align: right;
+    }
+    .note .actions button {
+      margin-left: 5px;
+      font-size: 0.9rem;
+      padding: 6px 10px;
+    }
+    h2 {
+      margin-top: 40px;
+      border-bottom: 2px solid #010750;
+      padding-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">&#8592; Back to Home</a>
+  <h1>Notes</h1>
+
+  <textarea id="noteInput" placeholder="Write your note..."></textarea><br />
+  <button onclick="addNote()">Save Note</button>
+
+  <div class="note-list" id="notesContainer">
+    <h2>Saved Notes</h2>
+    <!-- Notes will appear here -->
+  </div>
+
+  <div class="note-list" id="trashContainer">
+    <h2>Trash (Recoverable Notes)</h2>
+    <!-- Deleted notes appear here -->
+  </div>
+
+  <script>
+    let notes = JSON.parse(localStorage.getItem("notes") || "[]");
+    let trash = JSON.parse(localStorage.getItem("trash") || "[]");
+
+    const noteInput = document.getElementById("noteInput");
+    const notesContainer = document.getElementById("notesContainer");
+    const trashContainer = document.getElementById("trashContainer");
+
+    function saveToStorage() {
+      localStorage.setItem("notes", JSON.stringify(notes));
+      localStorage.setItem("trash", JSON.stringify(trash));
+    }
+
+    function addNote() {
+      const text = noteInput.value.trim();
+      if (text !== "") {
+        notes.push({ id: Date.now(), content: text });
+        noteInput.value = "";
+        saveToStorage();
+        renderNotes();
+      }
+    }
+
+    function deleteNote(id) {
+      const noteIndex = notes.findIndex(n => n.id === id);
+      if (noteIndex !== -1) {
+        const removed = notes.splice(noteIndex, 1)[0];
+        trash.push(removed);
+        saveToStorage();
+        renderNotes();
+      }
+    }
+
+    function recoverNote(id) {
+      const trashIndex = trash.findIndex(n => n.id === id);
+      if (trashIndex !== -1) {
+        const recovered = trash.splice(trashIndex, 1)[0];
+        notes.push(recovered);
+        saveToStorage();
+        renderNotes();
+      }
+    }
+
+    function renderNotes() {
+      notesContainer.innerHTML = `<h2>Saved Notes</h2>`;
+      trashContainer.innerHTML = `<h2>Trash (Recoverable Notes)</h2>`;
+
+      notes.forEach(note => {
+        const div = document.createElement("div");
+        div.className = "note";
+        div.innerHTML = `
+          <p>${note.content}</p>
+          <div class="actions">
+            <button onclick="deleteNote(${note.id})">Delete</button>
+          </div>
+        `;
+        notesContainer.appendChild(div);
+      });
+
+      trash.forEach(note => {
+        const div = document.createElement("div");
+        div.className = "note";
+        div.innerHTML = `
+          <p>${note.content}</p>
+          <div class="actions">
+            <button onclick="recoverNote(${note.id})">Recover</button>
+          </div>
+        `;
+        trashContainer.appendChild(div);
+      });
+    }
+
+    // Initialize
+    renderNotes();
+  </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>To-Do List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #010750;
+      padding: 2rem;
+      margin: 0;
+    }
+    .back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #010750;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    h1 {
+      margin-bottom: 1rem;
+    }
+    input[type="text"] {
+      width: 70%;
+      padding: 10px;
+      font-size: 1rem;
+      border: 1px solid #010750;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 15px;
+      background-color: #010750;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #490d61;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+    li {
+      padding: 10px;
+      background-color: #f2f2f2;
+      margin-bottom: 10px;
+      border-left: 5px solid #010750;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px;
+    }
+    .done {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .controls button {
+      margin-left: 5px;
+      font-size: 0.8rem;
+      padding: 5px 8px;
+    }
+
+    @media (max-width: 600px) {
+      input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      button {
+        width: 100%;
+        margin: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">&#8592; Back to Home</a>
+  <h1>To-Do List</h1>
+
+  <input type="text" id="taskInput" placeholder="Enter a new task..." />
+  <button onclick="addTask()">Add</button>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+    const taskList = document.getElementById("taskList");
+
+    function saveTasks() {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = "";
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.className = task.done ? "done" : "";
+        li.innerHTML = `
+          <span onclick="toggleDone(${index})" style="flex:1;cursor:pointer;">
+            ${task.text}
+          </span>
+          <div class="controls">
+            <button onclick="toggleDone(${index})">${task.done ? "Undo" : "Done"}</button>
+            <button onclick="deleteTask(${index})">Delete</button>
+          </div>
+        `;
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const text = input.value.trim();
+      if (text !== "") {
+        tasks.push({ text, done: false });
+        input.value = "";
+        saveTasks();
+        renderTasks();
+      }
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveTasks();
+      renderTasks();
+    }
+
+    function toggleDone(index) {
+      tasks[index].done = !tasks[index].done;
+      saveTasks();
+      renderTasks();
+    }
+
+    // On load
+    renderTasks();
+  </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Color Picker Tool</title>
+  <style>
+    :root {
+      --primary-darkblue: #010750;
+      --secondary-purple: #490d61;
+      --bg-white: #ffffff;
+      --text-dark: #333333;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-white);
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .back {
+      align-self: flex-start;
+      margin-bottom: 20px;
+      color: var(--primary-darkblue);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      color: var(--primary-darkblue);
+    }
+
+    .uploader {
+      margin-bottom: 1rem;
+    }
+
+    input[type="file"] {
+      padding: 8px;
+      border-radius: 6px;
+      border: 2px solid var(--primary-darkblue);
+    }
+
+    canvas {
+      display: none;
+    }
+
+    img {
+      max-width: 100%;
+      margin: 1rem 0;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+    }
+
+    .palette {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+
+    .color-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100px;
+    }
+
+    .color-box {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      margin-bottom: 5px;
+      border: 2px solid #ccc;
+      cursor: pointer;
+    }
+
+    .color-code {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #010750;
+      cursor: pointer;
+    }
+
+    .color-code:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">← Back</a>
+  <h1>Color Picker from Image</h1>
+
+  <div class="uploader">
+    <input type="file" accept="image/*" id="imageUploader" />
+  </div>
+
+  <img id="uploadedImage" />
+
+  <canvas id="imageCanvas"></canvas>
+
+  <div class="palette" id="palette"></div>
+
+  <script>
+    const uploader = document.getElementById("imageUploader");
+    const image = document.getElementById("uploadedImage");
+    const canvas = document.getElementById("imageCanvas");
+    const paletteContainer = document.getElementById("palette");
+
+    function rgbToHex(r, g, b) {
+      return "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
+    }
+
+    function getDominantColors(ctx, width, height, count = 6) {
+      const imgData = ctx.getImageData(0, 0, width, height);
+      const colorMap = {};
+
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const r = imgData.data[i];
+        const g = imgData.data[i + 1];
+        const b = imgData.data[i + 2];
+        const key = `${r},${g},${b}`;
+        colorMap[key] = (colorMap[key] || 0) + 1;
+      }
+
+      return Object.entries(colorMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, count)
+        .map(entry => entry[0].split(',').map(Number));
+    }
+
+    function displayPalette(colors) {
+      paletteContainer.innerHTML = "";
+      colors.forEach(color => {
+        const hex = rgbToHex(...color);
+        const rgb = `rgb(${color.join(", ")})`;
+
+        const swatch = document.createElement("div");
+        swatch.className = "color-swatch";
+
+        const box = document.createElement("div");
+        box.className = "color-box";
+        box.style.backgroundColor = hex;
+        box.title = "Click to copy HEX";
+
+        const code = document.createElement("div");
+        code.className = "color-code";
+        code.textContent = hex;
+        code.title = "Click to copy RGB";
+
+        box.addEventListener("click", () => {
+          navigator.clipboard.writeText(hex);
+          alert("HEX copied: " + hex);
+        });
+
+        code.addEventListener("click", () => {
+          navigator.clipboard.writeText(rgb);
+          alert("RGB copied: " + rgb);
+        });
+
+        swatch.appendChild(box);
+        swatch.appendChild(code);
+        paletteContainer.appendChild(swatch);
+      });
+    }
+
+    uploader.addEventListener("change", () => {
+      const file = uploader.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        image.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    image.onload = function () {
+      const ctx = canvas.getContext("2d");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+      const colors = getDominantColors(ctx, canvas.width, canvas.height);
+      displayPalette(colors);
+    };
+  </script>
+</body>
+</html>
